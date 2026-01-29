@@ -554,18 +554,18 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
       <div class="share-buttons">
         <span class="share-label">Share:</span>
-        <button class="share-button share-twitter" data-activity="${name}" title="Share on Twitter">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <button class="share-button share-twitter" data-activity="${name}" title="Share on Twitter" aria-label="Share ${name} on Twitter">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
           </svg>
         </button>
-        <button class="share-button share-facebook" data-activity="${name}" title="Share on Facebook">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <button class="share-button share-facebook" data-activity="${name}" title="Share on Facebook" aria-label="Share ${name} on Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
           </svg>
         </button>
-        <button class="share-button share-email" data-activity="${name}" title="Share via Email">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <button class="share-button share-email" data-activity="${name}" title="Share via Email" aria-label="Share ${name} via Email">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
             <polyline points="22,6 12,13 2,6"></polyline>
           </svg>
@@ -601,9 +601,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const shareFacebookButton = activityCard.querySelector(".share-facebook");
     const shareEmailButton = activityCard.querySelector(".share-email");
 
-    shareTwitterButton.addEventListener("click", () => handleShare(name, details, "twitter"));
-    shareFacebookButton.addEventListener("click", () => handleShare(name, details, "facebook"));
-    shareEmailButton.addEventListener("click", () => handleShare(name, details, "email"));
+    if (shareTwitterButton) {
+      shareTwitterButton.addEventListener("click", () => handleShare(name, details, "twitter"));
+    }
+    if (shareFacebookButton) {
+      shareFacebookButton.addEventListener("click", () => handleShare(name, details, "facebook"));
+    }
+    if (shareEmailButton) {
+      shareEmailButton.addEventListener("click", () => handleShare(name, details, "email"));
+    }
 
     // Add click handler for register button (only when authenticated)
     if (currentUser) {
@@ -629,12 +635,18 @@ document.addEventListener("DOMContentLoaded", () => {
     switch (platform) {
       case "twitter":
         shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`;
-        window.open(shareUrl, "_blank", "width=550,height=420");
+        const twitterWindow = window.open(shareUrl, "_blank", "width=550,height=420");
+        if (twitterWindow) {
+          showMessage(`Sharing ${activityName}...`, "info");
+        }
         break;
       
       case "facebook":
         shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}&quote=${encodeURIComponent(shareText)}`;
-        window.open(shareUrl, "_blank", "width=550,height=420");
+        const facebookWindow = window.open(shareUrl, "_blank", "width=550,height=420");
+        if (facebookWindow) {
+          showMessage(`Sharing ${activityName}...`, "info");
+        }
         break;
       
       case "email":
@@ -644,9 +656,6 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = shareUrl;
         break;
     }
-    
-    // Show feedback message
-    showMessage(`Sharing ${activityName}...`, "info");
   }
 
   // Event listeners for search and filter
