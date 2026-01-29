@@ -8,6 +8,60 @@ document.addEventListener("DOMContentLoaded", () => {
   const activityInput = document.getElementById("activity");
   const closeRegistrationModal = document.querySelector(".close-modal");
 
+  // Theme toggle elements
+  const themeToggle = document.getElementById("theme-toggle");
+  let themeIcon = null;
+  let themeText = null;
+  
+  // Only initialize theme functionality if all elements are present
+  if (themeToggle) {
+    themeIcon = themeToggle.querySelector(".icon");
+    themeText = themeToggle.querySelector("span:not(.icon)");
+    
+    if (themeIcon && themeText) {
+      // Dark mode functionality
+      function initializeTheme() {
+        // Check localStorage for saved theme preference
+        const savedTheme = localStorage.getItem("theme");
+        
+        if (savedTheme === "dark") {
+          document.body.classList.add("dark-mode");
+          updateThemeButton(true);
+        } else {
+          updateThemeButton(false);
+        }
+      }
+
+      function updateThemeButton(isDark) {
+        if (isDark) {
+          themeIcon.textContent = "☀️";
+          themeText.textContent = "Light";
+        } else {
+          themeIcon.textContent = "🌙";
+          themeText.textContent = "Dark";
+        }
+      }
+
+      function toggleTheme() {
+        const isDarkMode = document.body.classList.toggle("dark-mode");
+        
+        // Save preference to localStorage
+        localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+        
+        // Update button appearance
+        updateThemeButton(isDarkMode);
+      }
+
+      // Event listener for theme toggle
+      themeToggle.addEventListener("click", toggleTheme);
+
+      // Initialize theme on page load
+      initializeTheme();
+    } else {
+      console.warn("Theme toggle button found but missing required child elements");
+    }
+  }
+
   // Search and filter elements
   const searchInput = document.getElementById("activity-search");
   const searchButton = document.getElementById("search-button");
