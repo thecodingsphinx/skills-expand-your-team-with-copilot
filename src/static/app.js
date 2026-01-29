@@ -10,6 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Theme toggle elements
   const themeToggle = document.getElementById("theme-toggle");
+  if (!themeToggle) {
+    console.error("Theme toggle button not found");
+    return;
+  }
   const themeIcon = themeToggle.querySelector(".icon");
   const themeText = themeToggle.querySelector("span:not(.icon)");
 
